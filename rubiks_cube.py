@@ -1,106 +1,396 @@
-import pygame
 import math
 from pygame.locals import *
+import pygame
 from OpenGL.GL import *
 from OpenGL.GLU import *
 
 # Variáveis globais
 pos_x, pos_y, pos_z = 0, 0, -10
-angulo_rotacao = 0
-outro_angulo_rotacao = 0 
+angulo_rotacao_x = 45 # inicia o cubo inclinado, aparece o branco
+angulo_rotacao_y = -45 # inicia o cubo inclinado, aparece o vermelho
+angulo_rotacao_z = 0 # aparece o azul
 escala_obj = 1.0
+eixo_x = 0
+eixo_y = 0
+eixo_z = 0
 
-def desenhar_cena():
-    # Desativa o Culling para garantir que a face apareça de qualquer lado
-    glDisable(GL_CULL_FACE)
 
-    # farol traseiro
-    glBegin(GL_TRIANGLES)
-    glColor3f(1, 0.1, 0)
-    glVertex3f( 3.75,  0.8, 1)
-    glVertex3f( 3.75,  0.40, 1)
-    glVertex3f( 3.35,  0.8, 1)
-
-    # farol dianteiro
-    glColor3f(1, 0.90, 0)
-    glVertex3f( -3.75,  0.6, 1)
-    glVertex3f( -3.75,  0.30, 1)
-    glVertex3f( -3.35,  0.6, 1)
-    glEnd()
-
-    # roda da frente (menor)
-    glBegin(GL_POLYGON)
-    glColor3f(1, 1, 1)
-    sides = 32
-    radius = 0.75
-    for i in range(sides):
-        # Calculate the angle for this vertex
-        angle = 2.0 * math.pi * i / sides
-        
-        # Calculate x and y coordinates
-        cx = -2 + (math.cos(angle) * radius)
-        cy = -1.1 + (math.sin(angle) * radius)
-        
-        glVertex3f(cx, cy, 1)
-    glEnd()
-
-    # roda de tras (maior)
-    glBegin(GL_POLYGON)
-    glColor3f(1, 1, 1)
-    sides = 32
-    radius = 0.85
-    for i in range(sides):
-        # Calculate the angle for this vertex
-        angle = 2.0 * math.pi * i / sides
-        
-        # Calculate x and y coordinates
-        cx = 2 + (math.cos(angle) * radius)
-        cy = -1 + (math.sin(angle) * radius)
-        
-        glVertex3f(cx, cy, 1)
-    glEnd()
-
-    # pintura do chassi
+def mini_cubo_1(): #branco,azul,vermelho
     glBegin(GL_QUADS)
-    glColor3f(0, 0.05, 1)
-    glVertex3f(-3.75,  -1, 1)
-    glVertex3f( 3.75,  -0.95,   1)
-    glVertex3f( 3.75,  0.55,   1)
-    glVertex3f(-3.75,  0.1, 1)
 
-    # chassi
-    glColor3f(0.55, 0.55, 0.55)
-    glVertex3f(-3.75, -1.25, 1)
-    glVertex3f( 3.75, -1.25, 1)
-    glVertex3f( 3.75,  0.85, 1)
-    glVertex3f(-3.75,  0.65, 1)
-
-    # para brisa
+    #face externa 1 (branco)
     glColor3f(1, 1, 1)
-    glVertex3f(-2,  1.65, 1)
-    glVertex3f(-2.75,  0.65, 1)
-    glVertex3f( 2,  0.75, 1)
-    glVertex3f( 1,  1.75, 1)
+    glVertex3f(0, 1, 1)
+    glVertex3f(0, 1, 0)
+    glVertex3f(1, 1, 0)
+    glVertex3f(1, 1, 1)
+    
 
-    # aerofolio
-    glColor3f(0.45, 0.45, 0.45)
-    glVertex3f( 3.45,  1.7, 1)
-    glVertex3f( 3.35,  0.85,   1)
-    glVertex3f( 3.60,  0.85,   1)
-    glVertex3f( 3.65,  1.7, 1)
+    #face externa 2 (azul)
+    glColor3f(0, 0, 1)
+    glVertex3f(0, 1, 1)
+    glVertex3f(0, 0, 1)
+    glVertex3f(1, 0, 1)
+    glVertex3f(1, 1, 1)
+
+    #face interna 1
+    glColor3f(0.5, 0.5, 0.5)
+    glVertex3f(0, 1, 1)
+    glVertex3f(0, 0, 1)
+    glVertex3f(0, 0, 0)
+    glVertex3f(0, 1, 0)
+
+    #face interna 2
+    glColor3f(0.5, 0.5, 0.5)
+    glVertex3f(0, 0, 1)
+    glVertex3f(0, 0, 0)
+    glVertex3f(1, 0, 0)
+    glVertex3f(1, 0, 1)
+    
+    #face interna 3
+    glColor3f(0.5, 0.5, 0.5)
+    glVertex3f(0, 1, 0)
+    glVertex3f(0, 0, 0)
+    glVertex3f(1, 0, 0)
+    glVertex3f(1, 1, 0)
+
+    #face externa 3 (vermelho)
+    glColor3f(1, 0, 0)
+    glVertex3f(1, 1, 1)
+    glVertex3f(1, 0, 1)
+    glVertex3f(1, 0, 0)
+    glVertex3f(1, 1, 0)
     glEnd()
 
-def outra_pilha():
-    glBegin(GL_TRIANGLES)
+def mini_cubo_2(): #branco,azul,magenta
+    glBegin(GL_QUADS)
+
+    #face externa 1 (branco)
+    glColor3f(1, 1, 1)
+    glVertex3f(0, 1, 1)
+    glVertex3f(0, 1, 0)
+    glVertex3f(-1, 1, 0)
+    glVertex3f(-1, 1, 1)
+    
+
+    #face externa 2 (azul)
+    glColor3f(0, 0, 1)
+    glVertex3f(0, 1, 1)
+    glVertex3f(0, 0, 1)
+    glVertex3f(-1, 0, 1)
+    glVertex3f(-1, 1, 1)
+
+    #face interna 1
+    glColor3f(0.5, 0.5, 0.5)
+    glVertex3f(0, 1, 1)
+    glVertex3f(0, 0, 1)
+    glVertex3f(0, 0, 0)
+    glVertex3f(0, 1, 0)
+
+    #face interna 2
+    glColor3f(0.5, 0.5, 0.5)
+    glVertex3f(0, 0, 1)
+    glVertex3f(0, 0, 0)
+    glVertex3f(-1, 0, 0)
+    glVertex3f(-1, 0, 1)
+    
+    #face interna 3
+    glColor3f(0.5, 0.5, 0.5)
+    glVertex3f(0, 1, 0)
+    glVertex3f(0, 0, 0)
+    glVertex3f(-1, 0, 0)
+    glVertex3f(-1, 1, 0)
+
+    #face externa 3 (magenta)
+    glColor3f(1, 0.05, 1)
+    glVertex3f(-1, 1, 1)
+    glVertex3f(-1, 0, 1)
+    glVertex3f(-1, 0, 0)
+    glVertex3f(-1, 1, 0)
+    glEnd()
+
+def mini_cubo_3(): #branco,verde,magenta
+    glBegin(GL_QUADS)
+
+    #face interna 3
+    glColor3f(0.5, 0.5, 0.5)
+    glVertex3f(0, 0, 0)
+    glVertex3f(-1, 0, 0)
+    glVertex3f(-1, 1, 0)
+    glVertex3f(0, 1, 0)
+
+    #face interna 2
+    glColor3f(0.5, 0.5, 0.5)
+    glVertex3f(0, 0, 0)
+    glVertex3f(-1, 0, 0)
+    glVertex3f(-1, 0, -1)
+    glVertex3f(0, 0, -1)
+
+    #face interna 1
+    glColor3f(0.5, 0.5, 0.5)
+    glVertex3f(0, 0, 0)
+    glVertex3f(0, 0, -1)
+    glVertex3f(0, 1, -1)
+    glVertex3f(0, 1, 0)
+
+    #face externa 1 (branco)
+    glColor3f(1, 1, 1)
+    glVertex3f(-1, 1, -1)
+    glVertex3f(0, 1, -1)
+    glVertex3f(0, 1, 0)
+    glVertex3f(-1, 1, 0)
+
+    #face externa 2 (verde)
     glColor3f(0, 1, 0)
-    glVertex3f( -3.75,  0.6, 1)
-    glVertex3f( -3.75,  0.30, 1)
-    glVertex3f( -3.35,  0.6, 1)
+    glVertex3f(-1, 1, -1)
+    glVertex3f(0, 1, -1)
+    glVertex3f(0, 0, -1)
+    glVertex3f(-1, 0, -1)
+
+    #face externa 3 (magenta)
+    glColor3f(1, 0.05, 1)
+    glVertex3f(-1, 1, -1)
+    glVertex3f(-1, 0, -1)
+    glVertex3f(-1, 0, 0)
+    glVertex3f(-1, 1, 0)
     glEnd()
+
+def mini_cubo_4(): #branco,verde,vermelho
+    glBegin(GL_QUADS)
+
+    #face externa 1 (branco)
+    glColor3f(1, 1, 1)
+    glVertex3f(0, 1, -1)
+    glVertex3f(0, 1, 0)
+    glVertex3f(1, 1, 0)
+    glVertex3f(1, 1, -1)
+    
+
+    #face externa 2 (verde)
+    glColor3f(0, 1, 0)
+    glVertex3f(0, 1, -1)
+    glVertex3f(0, 0, -1)
+    glVertex3f(1, 0, -1)
+    glVertex3f(1, 1, -1)
+
+    #face interna 1
+    glColor3f(0.5, 0.5, 0.5)
+    glVertex3f(0, 1, -1)
+    glVertex3f(0, 0, -1)
+    glVertex3f(0, 0, 0)
+    glVertex3f(0, 1, 0)
+
+    #face interna 2
+    glColor3f(0.5, 0.5, 0.5)
+    glVertex3f(0, 0, -1)
+    glVertex3f(0, 0, 0)
+    glVertex3f(1, 0, 0)
+    glVertex3f(1, 0, -1)
+    
+    #face interna 3
+    glColor3f(0.5, 0.5, 0.5)
+    glVertex3f(0, 1, 0)
+    glVertex3f(0, 0, 0)
+    glVertex3f(1, 0, 0)
+    glVertex3f(1, 1, 0)
+
+    #face externa 3 (vermelho)
+    glColor3f(1, 0, 0)
+    glVertex3f(1, 1, -1)
+    glVertex3f(1, 0, -1)
+    glVertex3f(1, 0, 0)
+    glVertex3f(1, 1, 0)
+    glEnd()
+
+def mini_cubo_5(): #amarelo,verde,vermelho
+    glBegin(GL_QUADS)
+
+    #face interna 3
+    glColor3f(0.5, 0.5, 0.5)
+    glVertex3f(0, 0, 0)
+    glVertex3f(1, 0, 0)
+    glVertex3f(1, -1, 0)
+    glVertex3f(0, -1, 0)
+
+    #face interna 2
+    glColor3f(0.5, 0.5, 0.5)
+    glVertex3f(0, 0, 0)
+    glVertex3f(1, 0, 0)
+    glVertex3f(1, 0, -1)
+    glVertex3f(0, 0, -1)
+
+    #face interna 1
+    glColor3f(0.5, 0.5, 0.5)
+    glVertex3f(0, 0, 0)
+    glVertex3f(0, 0, -1)
+    glVertex3f(0, -1, -1)
+    glVertex3f(0, -1, 0)
+
+    #face externa 1 (amarelo)
+    glColor3f(1, 1, 0)
+    glVertex3f(1, -1, -1)
+    glVertex3f(0, -1, -1)
+    glVertex3f(0, -1, 0)
+    glVertex3f(1, -1, 0)
+
+    #face externa 2 (verde)
+    glColor3f(0, 1, 0)
+    glVertex3f(1, -1, -1)
+    glVertex3f(0, -1, -1)
+    glVertex3f(0, 0, -1)
+    glVertex3f(1, 0, -1)
+
+    #face externa 3 (vermelho)
+    glColor3f(1, 0, 0)
+    glVertex3f(1, -1, -1)
+    glVertex3f(1, 0, -1)
+    glVertex3f(1, 0, 0)
+    glVertex3f(1, -1, 0)
+    glEnd()
+
+def mini_cubo_6(): #amarelo,verde,magenta
+    glBegin(GL_QUADS)
+
+    #face interna 3
+    glColor3f(0.5, 0.5, 0.5)
+    glVertex3f(0, 0, 0)
+    glVertex3f(-1, 0, 0)
+    glVertex3f(-1, -1, 0)
+    glVertex3f(0, -1, 0)
+
+    #face interna 2
+    glColor3f(0.5, 0.5, 0.5)
+    glVertex3f(0, 0, 0)
+    glVertex3f(-1, 0, 0)
+    glVertex3f(-1, 0, -1)
+    glVertex3f(0, 0, -1)
+
+    #face interna 1
+    glColor3f(0.5, 0.5, 0.5)
+    glVertex3f(0, 0, 0)
+    glVertex3f(0, 0, -1)
+    glVertex3f(0, -1, -1)
+    glVertex3f(0, -1, 0)
+
+    #face externa 1 (amarelo)
+    glColor3f(1, 1, 0)
+    glVertex3f(-1, -1, -1)
+    glVertex3f(0, -1, -1)
+    glVertex3f(0, -1, 0)
+    glVertex3f(-1, -1, 0)
+
+    #face externa 2 (verde)
+    glColor3f(0, 1, 0)
+    glVertex3f(-1, -1, -1)
+    glVertex3f(0, -1, -1)
+    glVertex3f(0, 0, -1)
+    glVertex3f(-1, 0, -1)
+
+    #face externa 3 (magenta)
+    glColor3f(1, 0, 1)
+    glVertex3f(-1, -1, -1)
+    glVertex3f(-1, 0, -1)
+    glVertex3f(-1, 0, 0)
+    glVertex3f(-1, -1, 0)
+    glEnd()
+
+def mini_cubo_7(): #amarelo,azul,magenta
+    glBegin(GL_QUADS)
+
+    #face interna 3
+    glColor3f(0.5, 0.5, 0.5)
+    glVertex3f(0, 0, 0)
+    glVertex3f(-1, 0, 0)
+    glVertex3f(-1, -1, 0)
+    glVertex3f(0, -1, 0)
+
+    #face interna 2
+    glColor3f(0.5, 0.5, 0.5)
+    glVertex3f(0, 0, 0)
+    glVertex3f(-1, 0, 0)
+    glVertex3f(-1, 0, 1)
+    glVertex3f(0, 0, 1)
+
+    #face interna 1
+    glColor3f(0.5, 0.5, 0.5)
+    glVertex3f(0, 0, 0)
+    glVertex3f(0, 0, 1)
+    glVertex3f(0, -1, 1)
+    glVertex3f(0, -1, 0)
+
+    #face externa 1 (amarelo)
+    glColor3f(1, 1, 0)
+    glVertex3f(-1, -1, 1)
+    glVertex3f(0, -1, 1)
+    glVertex3f(0, -1, 0)
+    glVertex3f(-1, -1, 0)
+
+    #face externa 2 (azul)
+    glColor3f(0, 0, 1)
+    glVertex3f(-1, -1, 1)
+    glVertex3f(0, -1, 1)
+    glVertex3f(0, 0, 1)
+    glVertex3f(-1, 0, 1)
+
+    #face externa 3 (magenta)
+    glColor3f(1, 0.05, 1)
+    glVertex3f(-1, -1, 1)
+    glVertex3f(-1, 0, 1)
+    glVertex3f(-1, 0, 0)
+    glVertex3f(-1, -1, 0)
+    glEnd()
+
+def mini_cubo_8(): #amarelo,azul,vermelho
+    glBegin(GL_QUADS)
+
+    #face externa 1 (amarelo)
+    glColor3f(1, 1, 0)
+    glVertex3f(0, -1, 1)
+    glVertex3f(0, -1, 0)
+    glVertex3f(1, -1, 0)
+    glVertex3f(1, -1, 1)
+    
+
+    #face externa 2 (azul)
+    glColor3f(0, 0, 1)
+    glVertex3f(0, -1, 1)
+    glVertex3f(0, 0, 1)
+    glVertex3f(1, 0, 1)
+    glVertex3f(1, -1, 1)
+
+    #face interna 1
+    glColor3f(0.5, 0.5, 0.5)
+    glVertex3f(0, -1, 1)
+    glVertex3f(0, 0, 1)
+    glVertex3f(0, 0, 0)
+    glVertex3f(0, -1, 0)
+
+    #face interna 2
+    glColor3f(0.5, 0.5, 0.5)
+    glVertex3f(0, 0, 1)
+    glVertex3f(0, 0, 0)
+    glVertex3f(1, 0, 0)
+    glVertex3f(1, 0, 1)
+    
+    #face interna 3
+    glColor3f(0.5, 0.5, 0.5)
+    glVertex3f(0, -1, 0)
+    glVertex3f(0, 0, 0)
+    glVertex3f(1, 0, 0)
+    glVertex3f(1, -1, 0)
+
+    #face externa 3 (vermelho)
+    glColor3f(1, 0, 0)
+    glVertex3f(1, -1, 1)
+    glVertex3f(1, 0, 1)
+    glVertex3f(1, 0, 0)
+    glVertex3f(1, -1, 0)
+    glEnd()
+
 
 
 def main():
-    global pos_x, pos_y, pos_z, angulo_rotacao, escala_obj, outro_angulo_rotacao
+    global pos_x, pos_y, pos_z, angulo_rotacao_x, angulo_rotacao_y, angulo_rotacao_z, escala_obj, eixo_x, eixo_y, eixo_z
    
     pygame.init()
     display = (800, 600)
@@ -124,18 +414,21 @@ def main():
                 quit()
            
             if event.type == KEYDOWN:
-                if event.key == K_LEFT:
-                    pos_x -= 0.1 # translada para esquerda
-                if event.key == K_RIGHT:
-                    pos_x += 0.1 # translada para direita
-                if event.key == K_UP:
-                    pos_y += 0.1 # translada para cima
-                if event.key == K_DOWN:
-                    pos_y -= 0.1 # translada para baixo
-                if event.key == K_r:
-                    angulo_rotacao = 0 if angulo_rotacao >= 360 else angulo_rotacao + 10 # rotaciona sentido anti horario
-                if event.key == K_z:
-                    outro_angulo_rotacao = 0 if outro_angulo_rotacao >= 360 else outro_angulo_rotacao + 10
+                if event.key == K_x: # rotaciona eixo x
+                    angulo_rotacao_x = 45 if angulo_rotacao_x >= 405 else angulo_rotacao_x + 90 # mantem o cubo inclinado para sempre ver 3 faces
+                    eixo_x = 1
+                    eixo_y = 0
+                    eixo_z = 0
+                if event.key == K_y: # rotaciona eixo y
+                    angulo_rotacao_y = 45 if angulo_rotacao_y > 405 else angulo_rotacao_y + 90 # mantem o cubo inclinado para sempre ver 3 faces
+                    eixo_x = 0
+                    eixo_y = 1
+                    eixo_z = 0
+                if event.key == K_z: # rotaciona eixo z
+                    angulo_rotacao_z = 0 if angulo_rotacao_z >= 360 else angulo_rotacao_z + 90 # mantem o cubo inclinado para sempre ver 3 faces
+                    eixo_x = 0
+                    eixo_y = 0
+                    eixo_z = 1
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 4: # scroll up
@@ -148,27 +441,25 @@ def main():
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
        
         glLoadIdentity()
-
-
-        #desenhar_cena()
         
-        
-        glPushMatrix()
-        
-        
-        # Posicionamento (transformacoes geometricas)
+        #glPushMatrix()
         glTranslatef(pos_x, pos_y, pos_z)
-        glRotatef(outro_angulo_rotacao, 0, 0, 1)
-        glScalef(escala_obj, escala_obj, escala_obj)
-        outra_pilha()
-        glPopMatrix()
-        
 
-        glTranslatef(pos_x, pos_y, pos_z)
-        glRotatef(angulo_rotacao, 0, 0, 1)
-        glScalef(escala_obj, escala_obj, escala_obj)
-        desenhar_cena()
+        glRotatef(angulo_rotacao_x, 1, 0, 0)
+        glRotatef(angulo_rotacao_y, 0, 1, 0)
+        glRotatef(angulo_rotacao_z, 0, 0, 1)
         
+        glScalef(escala_obj, escala_obj, escala_obj)
+        mini_cubo_8()
+        mini_cubo_7()
+        mini_cubo_6()
+        mini_cubo_5()
+        mini_cubo_4()
+        mini_cubo_3()
+        mini_cubo_2()
+        mini_cubo_1()
+        #glPopMatrix()
+
         pygame.display.flip()
         pygame.time.wait(10)
 

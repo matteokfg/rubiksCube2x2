@@ -18,14 +18,7 @@ angulos = [
     [45,-45,0],
 ]
 
-quartetos = {
-    "x_superior": [0,3,4,7],
-    "x_inferior": [1,2,5,6],
-    "y_superior": [0,1,2,3],
-    "y_inferior": [4,5,6,7],
-    "z_superior": [0,1,6,7],
-    "z_inferior": [2,3,4,5],
-}
+
 
 escala_obj = 0.1
 
@@ -403,9 +396,18 @@ def mini_cubo_7(): #amarelo,azul,vermelho
     glEnd()
 
 
+quartetos = {
+    "x_superior": [0,3,4,7], #vermelho
+    "x_inferior": [1,2,5,6], #majenta
+    "y_superior": [0,1,2,3], #branco
+    "y_inferior": [4,5,6,7], #amarelo
+    "z_superior": [0,1,6,7], #azul
+    "z_inferior": [2,3,4,5], #verde
+}
+
 
 def main():
-    global pos_x, pos_y, pos_z, angulo_rotacao_x, angulo_rotacao_y, angulo_rotacao_z, escala_obj
+    global pos_x, pos_y, pos_z, escala_obj
     global angulos
    
     pygame.init()
@@ -428,6 +430,18 @@ def main():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
+
+            if quartetos["x_superior"][0] == quartetos["y_superior"][0] and quartetos["x_superior"][0] == quartetos["z_superior"][0] and quartetos["y_superior"][0] == quartetos["z_superior"][0]:
+                if quartetos["x_inferior"][2] == quartetos["y_inferior"][1] and quartetos["x_inferior"][2] == quartetos["z_inferior"][3] and quartetos["y_inferior"][1] == quartetos["z_inferior"][3]:
+                    pass
+                else:
+                    print("Valores nao sao iguais 1")
+                    pygame.quit()
+                    quit()
+            else:
+                print("Valores nao sao iguais 2")
+                pygame.quit()
+                quit()
            
             if event.type == KEYDOWN:
                 if event.key == K_q: # rotaciona eixo y sentido anti horario lado superior
@@ -436,37 +450,38 @@ def main():
                         angulos[mini_cubo][1] = -45 if angulos[mini_cubo][1] >= 360 or angulos[mini_cubo][1] < -45 else angulos[mini_cubo][1] + 90
                     #atualiza mapa dos minicubos
                     quartetos["y_superior"] = [quartetos["y_superior"][i-1 if i-1 < 4 else 0] for i, mini_cubo in enumerate(quartetos["y_superior"])]
-                    quartetos["x_superior"] = [quartetos["y_superior"][quartetos["y_superior"].index(mini_cubo)+1 if quartetos["y_superior"].index(mini_cubo)+1 < 4 else 0] if mini_cubo in quartetos["y_superior"] else mini_cubo for i, mini_cubo in enumerate(quartetos["x_superior"])]
-                    quartetos["x_inferior"] = [quartetos["y_superior"][quartetos["y_superior"].index(mini_cubo)+1 if quartetos["y_superior"].index(mini_cubo)+1 < 4 else 0] if mini_cubo in quartetos["y_superior"] else mini_cubo for i, mini_cubo in enumerate(quartetos["x_inferior"])]
-                    quartetos["z_superior"] = [quartetos["y_superior"][quartetos["y_superior"].index(mini_cubo)+1 if quartetos["y_superior"].index(mini_cubo)+1 < 4 else 0] if mini_cubo in quartetos["y_superior"] else mini_cubo for i, mini_cubo in enumerate(quartetos["z_superior"])]
-                    quartetos["z_inferior"] = [quartetos["y_superior"][quartetos["y_superior"].index(mini_cubo)+1 if quartetos["y_superior"].index(mini_cubo)+1 < 4 else 0] if mini_cubo in quartetos["y_superior"] else mini_cubo for i, mini_cubo in enumerate(quartetos["z_inferior"])]
+                    quartetos["x_superior"] = [quartetos["y_superior"][quartetos["y_superior"].index(mini_cubo)-1 if quartetos["y_superior"].index(mini_cubo)-1 < 4 else 0] if mini_cubo in quartetos["y_superior"] else mini_cubo for i, mini_cubo in enumerate(quartetos["x_superior"])]
+                    quartetos["x_inferior"] = [quartetos["y_superior"][quartetos["y_superior"].index(mini_cubo)-1 if quartetos["y_superior"].index(mini_cubo)-1 < 4 else 0] if mini_cubo in quartetos["y_superior"] else mini_cubo for i, mini_cubo in enumerate(quartetos["x_inferior"])]
+                    quartetos["z_superior"] = [quartetos["y_superior"][quartetos["y_superior"].index(mini_cubo)-1 if quartetos["y_superior"].index(mini_cubo)-1 < 4 else 0] if mini_cubo in quartetos["y_superior"] else mini_cubo for i, mini_cubo in enumerate(quartetos["z_superior"])]
+                    quartetos["z_inferior"] = [quartetos["y_superior"][quartetos["y_superior"].index(mini_cubo)-1 if quartetos["y_superior"].index(mini_cubo)-1 < 4 else 0] if mini_cubo in quartetos["y_superior"] else mini_cubo for i, mini_cubo in enumerate(quartetos["z_inferior"])]
+
                 if event.key == K_p: # rotaciona eixo y sentido horario lado superior
                     print("Tecla P")
                     for mini_cubo in quartetos["y_superior"]:
                         angulos[mini_cubo][1] = -45 if angulos[mini_cubo][1] <= -360 or angulos[mini_cubo][1] < -45 else angulos[mini_cubo][1] - 90
                     quartetos["y_superior"] = [quartetos["y_superior"][i+1 if i+1 < 4 else 0] for i, mini_cubo in enumerate(quartetos["y_superior"])]
-                    quartetos["x_superior"] = [quartetos["y_superior"][quartetos["y_superior"].index(mini_cubo)-1 if quartetos["y_superior"].index(mini_cubo)-1 < 4 else 0] if mini_cubo in quartetos["y_superior"] else mini_cubo for i, mini_cubo in enumerate(quartetos["x_superior"])]
-                    quartetos["x_inferior"] = [quartetos["y_superior"][quartetos["y_superior"].index(mini_cubo)-1 if quartetos["y_superior"].index(mini_cubo)-1 < 4 else 0] if mini_cubo in quartetos["y_superior"] else mini_cubo for i, mini_cubo in enumerate(quartetos["x_inferior"])]
-                    quartetos["z_superior"] = [quartetos["y_superior"][quartetos["y_superior"].index(mini_cubo)-1 if quartetos["y_superior"].index(mini_cubo)-1 < 4 else 0] if mini_cubo in quartetos["y_superior"] else mini_cubo for i, mini_cubo in enumerate(quartetos["z_superior"])]
-                    quartetos["z_inferior"] = [quartetos["y_superior"][quartetos["y_superior"].index(mini_cubo)-1 if quartetos["y_superior"].index(mini_cubo)-1 < 4 else 0] if mini_cubo in quartetos["y_superior"] else mini_cubo for i, mini_cubo in enumerate(quartetos["z_inferior"])]
+                    quartetos["x_superior"] = [quartetos["y_superior"][quartetos["y_superior"].index(mini_cubo)+1 if quartetos["y_superior"].index(mini_cubo)+1 < 4 else 0] if mini_cubo in quartetos["y_superior"] else mini_cubo for i, mini_cubo in enumerate(quartetos["x_superior"])]
+                    quartetos["x_inferior"] = [quartetos["y_superior"][quartetos["y_superior"].index(mini_cubo)+1 if quartetos["y_superior"].index(mini_cubo)+1 < 4 else 0] if mini_cubo in quartetos["y_superior"] else mini_cubo for i, mini_cubo in enumerate(quartetos["x_inferior"])]
+                    quartetos["z_superior"] = [quartetos["y_superior"][quartetos["y_superior"].index(mini_cubo)+1 if quartetos["y_superior"].index(mini_cubo)+1 < 4 else 0] if mini_cubo in quartetos["y_superior"] else mini_cubo for i, mini_cubo in enumerate(quartetos["z_superior"])]
+                    quartetos["z_inferior"] = [quartetos["y_superior"][quartetos["y_superior"].index(mini_cubo)+1 if quartetos["y_superior"].index(mini_cubo)+1 < 4 else 0] if mini_cubo in quartetos["y_superior"] else mini_cubo for i, mini_cubo in enumerate(quartetos["z_inferior"])]
                 if event.key == K_s: # rotaciona eixo y sentido anti horario lado inferior
                     print("Tecla S")
                     for mini_cubo in quartetos["y_inferior"]:
                         angulos[mini_cubo][1] = -45 if angulos[mini_cubo][1] >= 360 or angulos[mini_cubo][1] < -45 else angulos[mini_cubo][1] + 90
                     quartetos["y_inferior"] = [quartetos["y_inferior"][i-1 if i-1 < 4 else 0] for i, mini_cubo in enumerate(quartetos["y_inferior"])]
-                    quartetos["x_superior"] = [quartetos["y_inferior"][quartetos["y_inferior"].index(mini_cubo)-1 if quartetos["y_inferior"].index(mini_cubo)-1 < 4 else 0] if mini_cubo in quartetos["y_inferior"] else mini_cubo for i, mini_cubo in enumerate(quartetos["x_superior"])]
-                    quartetos["x_inferior"] = [quartetos["y_inferior"][quartetos["y_inferior"].index(mini_cubo)-1 if quartetos["y_inferior"].index(mini_cubo)-1 < 4 else 0] if mini_cubo in quartetos["y_inferior"] else mini_cubo for i, mini_cubo in enumerate(quartetos["x_inferior"])]
-                    quartetos["z_superior"] = [quartetos["y_inferior"][quartetos["y_inferior"].index(mini_cubo)-1 if quartetos["y_inferior"].index(mini_cubo)-1 < 4 else 0] if mini_cubo in quartetos["y_inferior"] else mini_cubo for i, mini_cubo in enumerate(quartetos["z_superior"])]
-                    quartetos["z_inferior"] = [quartetos["y_inferior"][quartetos["y_inferior"].index(mini_cubo)-1 if quartetos["y_inferior"].index(mini_cubo)-1 < 4 else 0] if mini_cubo in quartetos["y_inferior"] else mini_cubo for i, mini_cubo in enumerate(quartetos["z_inferior"])]
+                    quartetos["x_superior"] = [quartetos["y_inferior"][quartetos["y_inferior"].index(mini_cubo)+1 if quartetos["y_inferior"].index(mini_cubo)+1 < 4 else 0] if mini_cubo in quartetos["y_inferior"] else mini_cubo for i, mini_cubo in enumerate(quartetos["x_superior"])]
+                    quartetos["x_inferior"] = [quartetos["y_inferior"][quartetos["y_inferior"].index(mini_cubo)+1 if quartetos["y_inferior"].index(mini_cubo)+1 < 4 else 0] if mini_cubo in quartetos["y_inferior"] else mini_cubo for i, mini_cubo in enumerate(quartetos["x_inferior"])]
+                    quartetos["z_superior"] = [quartetos["y_inferior"][quartetos["y_inferior"].index(mini_cubo)+1 if quartetos["y_inferior"].index(mini_cubo)+1 < 4 else 0] if mini_cubo in quartetos["y_inferior"] else mini_cubo for i, mini_cubo in enumerate(quartetos["z_superior"])]
+                    quartetos["z_inferior"] = [quartetos["y_inferior"][quartetos["y_inferior"].index(mini_cubo)+1 if quartetos["y_inferior"].index(mini_cubo)+1 < 4 else 0] if mini_cubo in quartetos["y_inferior"] else mini_cubo for i, mini_cubo in enumerate(quartetos["z_inferior"])]
                 if event.key == K_l: # rotaciona eixo y sentido horario lado inferior
                     print("Tecla L")
                     for mini_cubo in quartetos["y_inferior"]:
                         angulos[mini_cubo][1] = -45 if angulos[mini_cubo][1] <= -360 or angulos[mini_cubo][1] < -45 else angulos[mini_cubo][1] - 90
                     quartetos["y_inferior"] = [quartetos["y_inferior"][i+1 if i+1 < 4 else 0] for i, mini_cubo in enumerate(quartetos["y_inferior"])]
-                    quartetos["x_superior"] = [quartetos["y_inferior"][quartetos["y_inferior"].index(mini_cubo)+1 if quartetos["y_inferior"].index(mini_cubo)+1 < 4 else 0] if mini_cubo in quartetos["y_inferior"] else mini_cubo for i, mini_cubo in enumerate(quartetos["x_superior"])]
-                    quartetos["x_inferior"] = [quartetos["y_inferior"][quartetos["y_inferior"].index(mini_cubo)+1 if quartetos["y_inferior"].index(mini_cubo)+1 < 4 else 0] if mini_cubo in quartetos["y_inferior"] else mini_cubo for i, mini_cubo in enumerate(quartetos["x_inferior"])]
-                    quartetos["z_superior"] = [quartetos["y_inferior"][quartetos["y_inferior"].index(mini_cubo)+1 if quartetos["y_inferior"].index(mini_cubo)+1 < 4 else 0] if mini_cubo in quartetos["y_inferior"] else mini_cubo for i, mini_cubo in enumerate(quartetos["z_superior"])]
-                    quartetos["z_inferior"] = [quartetos["y_inferior"][quartetos["y_inferior"].index(mini_cubo)+1 if quartetos["y_inferior"].index(mini_cubo)+1 < 4 else 0] if mini_cubo in quartetos["y_inferior"] else mini_cubo for i, mini_cubo in enumerate(quartetos["z_inferior"])]
+                    quartetos["x_superior"] = [quartetos["y_inferior"][quartetos["y_inferior"].index(mini_cubo)-1 if quartetos["y_inferior"].index(mini_cubo)-1 < 4 else 0] if mini_cubo in quartetos["y_inferior"] else mini_cubo for i, mini_cubo in enumerate(quartetos["x_superior"])]
+                    quartetos["x_inferior"] = [quartetos["y_inferior"][quartetos["y_inferior"].index(mini_cubo)-1 if quartetos["y_inferior"].index(mini_cubo)-1 < 4 else 0] if mini_cubo in quartetos["y_inferior"] else mini_cubo for i, mini_cubo in enumerate(quartetos["x_inferior"])]
+                    quartetos["z_superior"] = [quartetos["y_inferior"][quartetos["y_inferior"].index(mini_cubo)-1 if quartetos["y_inferior"].index(mini_cubo)-1 < 4 else 0] if mini_cubo in quartetos["y_inferior"] else mini_cubo for i, mini_cubo in enumerate(quartetos["z_superior"])]
+                    quartetos["z_inferior"] = [quartetos["y_inferior"][quartetos["y_inferior"].index(mini_cubo)-1 if quartetos["y_inferior"].index(mini_cubo)-1 < 4 else 0] if mini_cubo in quartetos["y_inferior"] else mini_cubo for i, mini_cubo in enumerate(quartetos["z_inferior"])]
 
 
 
